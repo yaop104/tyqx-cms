@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author: PENG
+ * @author: yao
  * @date: 2018/2/7
  * @description: shiro 配置类
  */

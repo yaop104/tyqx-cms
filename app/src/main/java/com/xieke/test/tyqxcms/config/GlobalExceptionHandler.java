@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 /**
  * 全局异常处理
  * 
- * @author jun hu
+ * @author yao
  * 
  */
 @ControllerAdvice

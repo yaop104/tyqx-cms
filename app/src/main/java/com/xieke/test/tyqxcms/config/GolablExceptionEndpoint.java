@@ -21,7 +21,7 @@ import java.util.Map;
 /**
  * 全局异常处理，当异常被@ControllerAdvice时不会走到这个处理类，没被处理时会走到这里
  * 例如 @valid入参校验失败的是不会走ControllerAdvice的，但会走这个处理器
- * @author yangzhilong
+ * @author yao
  *
  */
 @RestController
