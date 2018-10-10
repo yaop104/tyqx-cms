@@ -3,8 +3,8 @@ package com.xieke.test.tyqxcms.api;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.xieke.test.tyqxcms.dto.ResultInfo;
 import com.xieke.test.tyqxcms.dto.UserInfo;
+import com.xieke.test.tyqxcms.dto.token.PrintAccessToken;
 import com.xieke.test.tyqxcms.ex.BusinessException;
-import com.xieke.test.tyqxcms.service.IPermissionService;
 import com.xieke.test.tyqxcms.service.IUserService;
 import com.xieke.test.tyqxcms.util.JwtUtil;
 import org.apache.shiro.SecurityUtils;
@@ -16,13 +16,12 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+
 import static com.xieke.test.tyqxcms.util.PasswordEncoder.checkPassWord;
 
 @RestController
 public class ApiHomeController extends BaseController{
-
-    @Reference(version = "1.0.0")
-    private IPermissionService iPermissionService;
 
     @Reference(version = "1.0.0")
     private IUserService iUserService;
@@ -32,7 +31,9 @@ public class ApiHomeController extends BaseController{
                               @RequestParam("password") String password) {
         UserInfo userInfo = iUserService.findUserInfo(username);
         if (checkPassWord(userInfo.getPassWord(), userInfo.getCredentialsSalt(), password)) {
-            return new ResultInfo("0", "登录成功", JwtUtil.sign(username, userInfo.getPassWord()));
+            String token = JwtUtil.sign(username, userInfo.getPassWord());
+            Date expireTime = JwtUtil.getExpireTime(token);
+            return new ResultInfo("0", "登录成功", new PrintAccessToken(token, expireTime.getTime()));
         } else {
             throw new BusinessException("-1", "账号密码不正确");
         }

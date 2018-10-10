@@ -1,4 +1,4 @@
-package com.xieke.test.tyqxcms.dto;
+package com.xieke.test.tyqxcms.dto.token;
 
 import org.apache.shiro.authc.AuthenticationToken;
 

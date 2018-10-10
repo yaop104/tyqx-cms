@@ -1,6 +1,9 @@
 package com.xieke.test.tyqxcms.config;
 
-import com.xieke.test.tyqxcms.dto.JwtToken;
+import com.xieke.test.tyqxcms.dto.token.JwtToken;
+import com.xieke.test.tyqxcms.ex.BusinessException;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.ExpiredCredentialsException;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,6 +66,12 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
             try {
                 executeLogin(request, response);
             } catch (Exception e) {
+                if( e instanceof AuthenticationException ){
+                    if(e instanceof ExpiredCredentialsException){
+                        throw new BusinessException("3" , e.getMessage());
+                    }
+                    throw new BusinessException("2" , e.getMessage());
+                }
                 response401(request, response);
             }
         }

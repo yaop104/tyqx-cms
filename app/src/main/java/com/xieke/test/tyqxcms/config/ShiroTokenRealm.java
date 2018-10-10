@@ -1,22 +1,20 @@
 package com.xieke.test.tyqxcms.config;
 
 import com.alibaba.dubbo.config.annotation.Reference;
-import com.xieke.test.tyqxcms.dto.JwtToken;
 import com.xieke.test.tyqxcms.dto.UserInfo;
+import com.xieke.test.tyqxcms.dto.token.JwtToken;
 import com.xieke.test.tyqxcms.entity.Permission;
 import com.xieke.test.tyqxcms.service.IUserService;
 import com.xieke.test.tyqxcms.util.JwtUtil;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.SimpleAuthenticationInfo;
+import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
+
+import static com.xieke.test.tyqxcms.code.ConstantYao.NUMBER_ONE;
+import static com.xieke.test.tyqxcms.code.ConstantYao.NUMBER_TWO;
 
 /**
  * @author Mr.Li
@@ -28,9 +26,6 @@ public class ShiroTokenRealm extends AuthorizingRealm {
 
     @Reference(version = "1.0.0")
     private IUserService iUserService;
-    @Autowired
-    private StringRedisTemplate stringRedisTemplate;
-
 
     /**
      * 必须重写此方法，不然Shiro会报错
@@ -74,8 +69,19 @@ public class ShiroTokenRealm extends AuthorizingRealm {
             throw new AuthenticationException("用户不存在!");
         }
 
-        if (!JwtUtil.verify(token, username, userInfo.getPassWord())) {
-            throw new AuthenticationException("用户名或密码错误");
+//        if (!JwtUtil.verify(token, username, userInfo.getPassWord())) {
+//            throw new AuthenticationException("用户名或密码错误");
+//        }
+        int flag = JwtUtil.verifyWithStatus(token, username, userInfo.getPassWord());
+
+        if ( NUMBER_ONE == flag) {
+            String msg = "用户名或密码错误";
+            throw new AuthenticationException(msg);
+        }
+
+        if ( NUMBER_TWO == flag) {
+            String msg = "token时间过期";
+            throw new ExpiredCredentialsException(msg);
         }
 
         return new SimpleAuthenticationInfo(token, token, getName());

@@ -1,9 +1,5 @@
 package com.xieke.test.tyqxcms.config;
 
-import java.util.Arrays;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.log4j.Logger;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -14,6 +10,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
+
 @Aspect
 @Component
 public class WebLogAspect {
@@ -22,7 +21,7 @@ public class WebLogAspect {
 
 	ThreadLocal<Long> startTime = new ThreadLocal<>();
 
-	@Pointcut("execution(public * com.xieke.test.tyqxcms.web..*.*(..))")
+	@Pointcut("execution(public * com.xieke.test.tyqxcms.api.*.*(..))")
 	public void webLog() {
 	}
 
