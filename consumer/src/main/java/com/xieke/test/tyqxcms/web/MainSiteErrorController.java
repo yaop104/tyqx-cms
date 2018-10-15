@@ -14,7 +14,7 @@ public class MainSiteErrorController implements ErrorController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private final static String ERROR_PATH = "/error";
+    private final static String ERROR_PATH = "error";
 
     /**
      * Supports the HTML Error View
